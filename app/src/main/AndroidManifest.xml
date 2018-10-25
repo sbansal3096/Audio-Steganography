@@ -21,7 +21,7 @@ s
         </activity>
 
         <activity android:name="EncoderActivity">
-            <intent-filter android:label="Encode with app">
+            <intent-filter android:label="Encode Audio">
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="audio/*" />
@@ -29,7 +29,7 @@ s
         </activity>
 
         <activity android:name="DecoderActivity">
-            <intent-filter android:label="Decode with app">
+            <intent-filter android:label="Decode Audio">
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="audio/*" />

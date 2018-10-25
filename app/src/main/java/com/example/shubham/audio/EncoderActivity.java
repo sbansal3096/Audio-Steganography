@@ -1,8 +1,11 @@
 package com.example.shubham.audio;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,12 +15,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.net.URI;
+
 public class EncoderActivity extends AppCompatActivity {
 
     EditText message;
     EditText key;
 
     Uri inputAudio;
+    String outputAudio;
 
     private static final int FILE_SELECT_CODE = 0;
     private static final String TAG = "stegano";
@@ -28,6 +35,8 @@ public class EncoderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_encoder);
+
+        outputAudio = Environment.getExternalStorageDirectory() + "/test.m4a";
 
         Intent intent = getIntent();
 
@@ -51,14 +60,10 @@ public class EncoderActivity extends AppCompatActivity {
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String sharePath = Environment.getExternalStorageDirectory().getPath()
-//                    + "/" + key.getText().toString();
-//                Log.d(TAG, sharePath);
-//                Uri uri = Uri.parse(sharePath);
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("audio/*");
                 share.putExtra(Intent.EXTRA_STREAM, inputAudio);
-                startActivity(Intent.createChooser(share, "Share sound file"));
+                startActivity(Intent.createChooser(share, "Share Encrypted Sound File"));
             }
         });
 
@@ -80,6 +85,22 @@ public class EncoderActivity extends AppCompatActivity {
                 }
             }
         });
+
+        encodeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LSBEncoderDecoder lsbEncoderDecoder = new LSBEncoderDecoder();
+                Log.d(TAG, inputAudio.toString());
+                Log.d(TAG, "" + getRealPathFromURI(getBaseContext(), inputAudio));
+                Log.d(TAG, outputAudio);
+                try {
+                    lsbEncoderDecoder.encrypt("Hi", new File(new URI(inputAudio.toString())),
+                            new File(outputAudio), 0);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
@@ -94,6 +115,21 @@ public class EncoderActivity extends AppCompatActivity {
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 
 }
