@@ -62,7 +62,7 @@
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Message"
+        android:hint="Message"
         app:layout_constraintBottom_toTopOf="@+id/key"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -78,9 +78,11 @@
         android:layout_marginRight="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Key"
+        android:hint="Key"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/message"
+        app:layout_constraintBottom_toTopOf="@id/encode"
         tools:layout_editor_absoluteY="208dp" />
 
 </android.support.constraint.ConstraintLayout>
