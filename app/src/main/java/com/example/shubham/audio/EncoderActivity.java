@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URI;
 
 public class EncoderActivity extends AppCompatActivity {
@@ -91,11 +93,11 @@ public class EncoderActivity extends AppCompatActivity {
             public void onClick(View v) {
                 LSBEncoderDecoder lsbEncoderDecoder = new LSBEncoderDecoder();
                 Log.d(TAG, inputAudio.toString());
-                Log.d(TAG, "" + getRealPathFromURI(getBaseContext(), inputAudio));
                 Log.d(TAG, outputAudio);
                 try {
-                    lsbEncoderDecoder.encrypt("Hi", new File(new URI(inputAudio.toString())),
-                            new File(outputAudio), 0);
+                    InputStream ins = getContentResolver().openInputStream(inputAudio);
+                    lsbEncoderDecoder.Audioencrypt("Hi", ins,
+                            new File(outputAudio), 22);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -115,21 +117,6 @@ public class EncoderActivity extends AppCompatActivity {
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
     }
 
 }
