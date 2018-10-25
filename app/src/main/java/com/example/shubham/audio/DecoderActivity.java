@@ -24,7 +24,7 @@ public class DecoderActivity extends AppCompatActivity {
         if (intent.getType().contains("audio/")) {
             Log.d(TAG, "Here again");
             inputAudio = intent.getData();
-//            Log.d(TAG, inputAudio.toString());
+            Log.d(TAG, inputAudio.toString());
         }
 //        Button encoder_main = findViewById(R.id.encoder_main);
 //        Button decoder_main = findViewById(R.id.decoder_main);
