@@ -22,11 +22,25 @@ public class EncoderActivity extends AppCompatActivity {
     private static final int FILE_SELECT_CODE = 0;
     private static final String TAG = "stegano";
 
+    TextView label;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_encoder);
+
+        Intent intent = getIntent();
+
+        if (intent.getType() != null && intent.getType().contains("audio/")) {
+            Bundle bundle = intent.getExtras();
+            inputAudio =  (Uri) bundle.get(Intent.EXTRA_STREAM);
+            Log.d(TAG, "" + inputAudio.toString());
+        }
+
+        label = findViewById(R.id.label);
+        if (inputAudio != null) {
+            label.setText(inputAudio.toString());
+        }
 
         Button shareButton = findViewById(R.id.share_button);
         Button importButton = findViewById(R.id.import_button);
