@@ -15,7 +15,7 @@
         tools:layout_editor_absoluteY="404dp" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/import_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Import"
@@ -23,7 +23,7 @@
         tools:layout_editor_absoluteY="404dp" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/share_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Share"
@@ -31,7 +31,7 @@
         tools:layout_editor_absoluteY="403dp" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -41,7 +41,7 @@
         tools:layout_editor_absoluteY="66dp" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/key"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
