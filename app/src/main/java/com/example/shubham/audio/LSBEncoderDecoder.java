@@ -1,6 +1,7 @@
 package com.example.shubham.audio;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -43,11 +44,12 @@ public class LSBEncoderDecoder {
         byte b[] = new byte[1];
         BigInteger Abi, Mbi;
         int k, k1;
+        //ins= new FileInputStream(file);
         OutputStream outs = new FileOutputStream(file);
 
         System.out.println(message);
-        String encoded = encode(message, String.valueOf(key));
-        message = encoded;
+//        String encoded = encode(message, String.valueOf(key));
+//        message = encoded;
         int len = message.length();
         System.out.println(message);
         byte mess[] = new byte[1];
@@ -241,7 +243,6 @@ public class LSBEncoderDecoder {
 
         for (int i = 0; i < 8; i++) {
             ins.read(b);
-            Log.d(TAG, b.toString());
             bb1 = new BigInteger(b);
             String str = bb1.toString(2);
             int len = bb1.bitLength();
@@ -286,26 +287,27 @@ public class LSBEncoderDecoder {
             String s1 = bb2.toString(2);
             int l1 = bb2.intValue();
             me[count] = (char) l1;
+            System.out.println(me[count]);
             count++;
         }
 
         String message = new String(me);
         System.out.println(message);
         String finalmsg = message;
-        //String decoded = decode(finalmsg, String.valueOf(key));
-
-        byte[] a= Base64.decode(finalmsg,Base64.DEFAULT);
-        System.out.println(a);
-        byte[] key1= String.valueOf(key).getBytes();
-        System.out.println(key1);
-        byte[] out = new byte[a.length];
-        System.out.println(a.length);
-        for (int i = 0; i < a.length; i++) {
-            out[i] = (byte) (a[i] ^ key1[i%key1.length]);
-            System.out.println(out);
-        }
-        System.out.println(out);
-        finalmsg = new String(out);
+//        String decoded = decode(finalmsg, String.valueOf(key));
+//        finalmsg= decoded;
+//        byte[] a= Base64.decode(finalmsg,Base64.DEFAULT);
+//        System.out.println(a);
+//        byte[] key1= String.valueOf(key).getBytes();
+//        System.out.println(key1);
+//        byte[] out = new byte[a.length];
+//        System.out.println(a.length);
+//        for (int i = 0; i < a.length; i++) {
+//            out[i] = (byte) (a[i] ^ key1[i%key1.length]);
+//            System.out.println(out);
+//        }
+//        System.out.println(out);
+//        String decoded = new String(out);
         System.out.println(finalmsg);
         //      Amessage.setText(finalmsg);
         Log.d(TAG, "okok");

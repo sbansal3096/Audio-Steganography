@@ -38,7 +38,7 @@ public class EncoderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_encoder);
 
-        outputAudio = Environment.getExternalStorageDirectory() + "/test.m4a";
+        outputAudio = Environment.getExternalStorageDirectory() + "/test.wav";
 
         Intent intent = getIntent();
 
@@ -96,7 +96,7 @@ public class EncoderActivity extends AppCompatActivity {
                 Log.d(TAG, outputAudio);
                 try {
                     InputStream ins = getContentResolver().openInputStream(inputAudio);
-                    lsbEncoderDecoder.Audioencrypt("Hi", ins,
+                    lsbEncoderDecoder.Audioencrypt("HELLO", ins,
                             new File(outputAudio), 22);
                 } catch (Exception ex) {
                     ex.printStackTrace();
