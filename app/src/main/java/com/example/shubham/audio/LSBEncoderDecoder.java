@@ -48,8 +48,8 @@ public class LSBEncoderDecoder {
         OutputStream outs = new FileOutputStream(file);
 
         System.out.println(message);
-//        String encoded = encode(message, String.valueOf(key));
-//        message = encoded;
+        String encoded = encode(message, String.valueOf(key));
+        message = encoded;
         int len = message.length();
         System.out.println(message);
         byte mess[] = new byte[1];
@@ -294,20 +294,8 @@ public class LSBEncoderDecoder {
         String message = new String(me);
         System.out.println(message);
         String finalmsg = message;
-//        String decoded = decode(finalmsg, String.valueOf(key));
-//        finalmsg= decoded;
-//        byte[] a= Base64.decode(finalmsg,Base64.DEFAULT);
-//        System.out.println(a);
-//        byte[] key1= String.valueOf(key).getBytes();
-//        System.out.println(key1);
-//        byte[] out = new byte[a.length];
-//        System.out.println(a.length);
-//        for (int i = 0; i < a.length; i++) {
-//            out[i] = (byte) (a[i] ^ key1[i%key1.length]);
-//            System.out.println(out);
-//        }
-//        System.out.println(out);
-//        String decoded = new String(out);
+        String decoded = decode(finalmsg, String.valueOf(key));
+        finalmsg= decoded;
         System.out.println(finalmsg);
         //      Amessage.setText(finalmsg);
         Log.d(TAG, "okok");
