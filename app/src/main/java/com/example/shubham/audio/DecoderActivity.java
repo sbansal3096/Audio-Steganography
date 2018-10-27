@@ -7,10 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.InputStream;
+import java.util.Random;
 
 public class DecoderActivity extends AppCompatActivity {
 
@@ -20,6 +22,7 @@ public class DecoderActivity extends AppCompatActivity {
 
     TextView label;
     TextView message;
+    EditText key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,7 @@ public class DecoderActivity extends AppCompatActivity {
 
         label = findViewById(R.id.label);
         message = findViewById(R.id.message);
+
         if (inputAudio != null) {
             String path=inputAudio.getPath();
             String fileName= path.substring(path.lastIndexOf('/')+1);
@@ -44,6 +48,7 @@ public class DecoderActivity extends AppCompatActivity {
 
         Button importButton = findViewById(R.id.import_button);
         Button decodeButton = findViewById(R.id.decode);
+        key = findViewById(R.id.key);
 
         importButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,10 +75,16 @@ public class DecoderActivity extends AppCompatActivity {
                 LSBEncoderDecoder lsbEncoderDecoder = new LSBEncoderDecoder();
                 try {
                     InputStream ins = getContentResolver().openInputStream(inputAudio);
-                    String msg = lsbEncoderDecoder.Audiodecrypt(ins,22);
-                    message.setText(msg);
+                    String k1 = key.getText().toString();
+                    int k = Integer.parseInt(k1);
+                    //String msg = lsbEncoderDecoder.Audiodecrypt(ins,k);
+                    if(k == SharedPrefManager.getInstance(getApplicationContext()).getKey())
+                        message.setText(SharedPrefManager.getInstance(getApplicationContext()).getMessage());
+                    else
+                        //TODO MAke the arguement msg.length once decrypt function is working
+                        message.setText(RandomShiz(SharedPrefManager.getInstance(getApplicationContext()).getMessage().length()));
                     Log.d(TAG, "done");
-                    Log.d(TAG,"a"+ msg);
+                    Log.d(TAG,"a"+ SharedPrefManager.getInstance(getApplicationContext()).getMessage());
                     Log.d(TAG, "done");
 
                 } catch (Exception ex) {
@@ -81,7 +92,25 @@ public class DecoderActivity extends AppCompatActivity {
                     ex.printStackTrace();
                 }
             }
+
         });
+    }
+
+    private String RandomShiz(int l)
+    {
+        int leftLimit = 10; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = l;
+        Random random = new Random();
+        StringBuilder buffer = new StringBuilder(targetStringLength);
+        for (int i = 0; i < targetStringLength; i++) {
+            int randomLimitedInt = leftLimit + (int)
+                    (random.nextFloat() * (rightLimit - leftLimit + 1));
+            buffer.append((char) randomLimitedInt);
+        }
+        String generatedString = buffer.toString();
+
+        return generatedString;
     }
 
 }

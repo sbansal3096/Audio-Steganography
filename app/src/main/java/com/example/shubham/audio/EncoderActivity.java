@@ -56,7 +56,7 @@ public class EncoderActivity extends AppCompatActivity {
         Button shareButton = findViewById(R.id.share_button);
         Button importButton = findViewById(R.id.import_button);
         Button encodeButton = findViewById(R.id.encode);
-
+        message = findViewById(R.id.message);
         key = findViewById(R.id.key);
 
         shareButton.setOnClickListener(new View.OnClickListener() {
@@ -96,8 +96,15 @@ public class EncoderActivity extends AppCompatActivity {
                 Log.d(TAG, outputAudio);
                 try {
                     InputStream ins = getContentResolver().openInputStream(inputAudio);
-                    lsbEncoderDecoder.Audioencrypt("HELLO", ins,
-                            new File(outputAudio), 22);
+                    final String m  = message.getText().toString();
+                   final  String k1 = key.getText().toString();
+                    int k = Integer.parseInt(k1);
+                    SharedPrefManager.getInstance(getApplicationContext()).storeMessage(m);
+                    SharedPrefManager.getInstance(getApplicationContext()).storeKey(k);
+
+                    lsbEncoderDecoder.Audioencrypt(m, ins,
+                            new File(outputAudio),22);
+                    Log.d("Done","Done Encryption");
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
