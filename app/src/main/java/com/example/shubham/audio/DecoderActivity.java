@@ -113,4 +113,18 @@ public class DecoderActivity extends AppCompatActivity {
         return generatedString;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case FILE_SELECT_CODE:
+                if (resultCode == RESULT_OK) {
+                    // Get the Uri of the selected file
+                    inputAudio = data.getData();
+                    Log.d(TAG, "File Uri: " + inputAudio.toString());
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
 }
