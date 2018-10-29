@@ -77,12 +77,12 @@ public class DecoderActivity extends AppCompatActivity {
                     InputStream ins = getContentResolver().openInputStream(inputAudio);
                     String k1 = key.getText().toString();
                     int k = Integer.parseInt(k1);
-                    //String msg = lsbEncoderDecoder.Audiodecrypt(ins,k);
-                    if(k == SharedPrefManager.getInstance(getApplicationContext()).getKey())
-                        message.setText(SharedPrefManager.getInstance(getApplicationContext()).getMessage());
-                    else
-                        //TODO MAke the arguement msg.length once decrypt function is working
-                        message.setText(RandomShiz(SharedPrefManager.getInstance(getApplicationContext()).getMessage().length()));
+                    String msg = lsbEncoderDecoder.Audiodecrypt(ins,k);
+//                    if(k == SharedPrefManager.getInstance(getApplicationContext()).getKey())
+//                        message.setText(SharedPrefManager.getInstance(getApplicationContext()).getMessage());
+//                    else
+//                        message.setText(RandomShiz(SharedPrefManager.getInstance(getApplicationContext()).getMessage().length()));
+                    message.setText(msg);
                     Log.d(TAG, "done");
                     Log.d(TAG,"a"+ SharedPrefManager.getInstance(getApplicationContext()).getMessage());
                     Log.d(TAG, "done");

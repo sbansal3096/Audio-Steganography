@@ -26,6 +26,7 @@ public class EncoderActivity extends AppCompatActivity {
     EditText key;
 
     Uri inputAudio;
+    Uri outputAudioUri;
     String outputAudio;
 
     private static final int FILE_SELECT_CODE = 0;
@@ -38,8 +39,11 @@ public class EncoderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_encoder);
 
-        outputAudio = Environment.getExternalStorageDirectory() + "/test.wav";
+        label = findViewById(R.id.label);
 
+        outputAudio = Environment.getExternalStorageDirectory() + "/test.wav";
+        outputAudioUri = Uri.fromFile(new File(outputAudio));
+        label.setText(outputAudioUri.toString());
         Intent intent = getIntent();
 
         if (intent.getType() != null && intent.getType().contains("audio/")) {
@@ -48,7 +52,6 @@ public class EncoderActivity extends AppCompatActivity {
             Log.d(TAG, "" + inputAudio.toString());
         }
 
-        label = findViewById(R.id.label);
         if (inputAudio != null) {
             label.setText(inputAudio.toString());
         }
@@ -62,9 +65,10 @@ public class EncoderActivity extends AppCompatActivity {
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                outputAudioUri = Uri.fromFile(new File(outputAudio));
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("audio/*");
-                share.putExtra(Intent.EXTRA_STREAM, inputAudio);
+                share.putExtra(Intent.EXTRA_STREAM, outputAudioUri);
                 startActivity(Intent.createChooser(share, "Share Encrypted Sound File"));
             }
         });
@@ -97,13 +101,14 @@ public class EncoderActivity extends AppCompatActivity {
                 try {
                     InputStream ins = getContentResolver().openInputStream(inputAudio);
                     final String m  = message.getText().toString();
-                   final  String k1 = key.getText().toString();
+                    final  String k1 = key.getText().toString();
                     int k = Integer.parseInt(k1);
                     SharedPrefManager.getInstance(getApplicationContext()).storeMessage(m);
                     SharedPrefManager.getInstance(getApplicationContext()).storeKey(k);
 
                     lsbEncoderDecoder.Audioencrypt(m, ins,
-                            new File(outputAudio),22);
+                            new File(outputAudio),k);
+                    label.setText("Encoding done");
                     Log.d("Done","Done Encryption");
                 } catch (Exception ex) {
                     ex.printStackTrace();
