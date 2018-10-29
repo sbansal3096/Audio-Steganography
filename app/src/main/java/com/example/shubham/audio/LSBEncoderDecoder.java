@@ -110,28 +110,35 @@ public class LSBEncoderDecoder {
                         Aby.getChars(0, Alen, Ach, 0);
                         if (b[0] == 0) {
                             Alen = 1;
-                        }
-                        if (Clen[j - k] == '0' && Ach[Alen - 1] == '1') {
-                            if (Alen == Abi.bitLength()) {
-                                BigInteger bi = new BigInteger("11111110", 2);
-                                BigInteger big = Abi.and(bi);
-                                b = big.toByteArray();
-                            } else {
-                                BigInteger bi = new BigInteger("-1", 2);
-                                BigInteger big = Abi.subtract(bi);
-                                b = big.toByteArray();
-                            }
-                        } else if (Clen[j - k] == '1' && Ach[Alen - 1] == '0') {
-                            if (Alen == Abi.bitLength()) {
+                            if (Clen[j - k] == '1'){
                                 BigInteger bi = new BigInteger("1", 2);
                                 BigInteger big = Abi.add(bi);
                                 b = big.toByteArray();
-                            } else {
-                                BigInteger bi = new BigInteger("-1", 2);
-                                BigInteger big = Abi.add(bi);
-                                b = big.toByteArray();
                             }
+                        }
+                        else{
+                            if (Clen[j - k] == '0' && Ach[Alen - 1] == '1') {
+                                if (Alen == Abi.bitLength()) {
+                                    BigInteger bi = new BigInteger("11111110", 2);
+                                    BigInteger big = Abi.and(bi);
+                                    b = big.toByteArray();
+                                } else {
+                                    BigInteger bi = new BigInteger("-1", 2);
+                                    BigInteger big = Abi.subtract(bi);
+                                    b = big.toByteArray();
+                                }
+                            } else if (Clen[j - k] == '1' && Ach[Alen - 1] == '0') {
+                                if (Alen == Abi.bitLength()) {
+                                    BigInteger bi = new BigInteger("1", 2);
+                                    BigInteger big = Abi.add(bi);
+                                    b = big.toByteArray();
+                                } else {
+                                    BigInteger bi = new BigInteger("-1", 2);
+                                    BigInteger big = Abi.add(bi);
+                                    b = big.toByteArray();
+                                }
 
+                            }
                         }
                         outs.write(b);
                     } // end else
@@ -192,27 +199,34 @@ public class LSBEncoderDecoder {
                         Aby.getChars(0, Alen, Ach, 0);
                         if (b[0] == 0) {
                             Alen = 1;
-                        }
-
-                        if (Clen[j - k1] == '0' && Ach[Alen - 1] == '1') {
-                            if (Alen == Abi.bitLength()) {
-                                BigInteger bi = new BigInteger("11111110", 2);
-                                BigInteger big = Abi.and(bi);
-                                b = big.toByteArray();
-                            } else {
-                                BigInteger bi = new BigInteger("-1", 2);
-                                BigInteger big = Abi.subtract(bi);
-                                b = big.toByteArray();
-                            }
-                        } else if (Clen[j - k1] == '1' && Ach[Alen - 1] == '0') {
-                            if (Alen == Abi.bitLength()) {
+                            if(Clen[j - k1] == '1'){
                                 BigInteger bi = new BigInteger("1", 2);
                                 BigInteger big = Abi.add(bi);
                                 b = big.toByteArray();
-                            } else {
-                                BigInteger bi = new BigInteger("-1", 2);
-                                BigInteger big = Abi.add(bi);
-                                b = big.toByteArray();
+                            }
+
+                        }
+                        else {
+                            if (Clen[j - k1] == '0' && Ach[Alen - 1] == '1') {
+                                if (Alen == Abi.bitLength()) {
+                                    BigInteger bi = new BigInteger("11111110", 2);
+                                    BigInteger big = Abi.and(bi);
+                                    b = big.toByteArray();
+                                } else {
+                                    BigInteger bi = new BigInteger("-1", 2);
+                                    BigInteger big = Abi.subtract(bi);
+                                    b = big.toByteArray();
+                                }
+                            } else if (Clen[j - k1] == '1' && Ach[Alen - 1] == '0') {
+                                if (Alen == Abi.bitLength()) {
+                                    BigInteger bi = new BigInteger("1", 2);
+                                    BigInteger big = Abi.add(bi);
+                                    b = big.toByteArray();
+                                } else {
+                                    BigInteger bi = new BigInteger("-1", 2);
+                                    BigInteger big = Abi.add(bi);
+                                    b = big.toByteArray();
+                                }
                             }
                         }
                         outs.write(b);
@@ -224,11 +238,12 @@ public class LSBEncoderDecoder {
         } // for loop i
 
         while (true) {
-            int i = ins.read();
+            int i = ins.read(b);
             if (i == -1) {
                 break;
             }
-            outs.write(i);
+            outs.write(b);
+            System.out.println(outs);
         }
         ins.close();
         outs.close();
@@ -296,6 +311,18 @@ public class LSBEncoderDecoder {
         String finalmsg = message;
         String decoded = decode(finalmsg, String.valueOf(key));
         finalmsg= decoded;
+//        byte[] a= Base64.decode(finalmsg,Base64.DEFAULT);
+//        System.out.println(a);
+//        byte[] key1= String.valueOf(key).getBytes();
+//        System.out.println(key1);
+//        byte[] out = new byte[a.length];
+//        System.out.println(a.length);
+//        for (int i = 0; i < a.length; i++) {
+//            out[i] = (byte) (a[i] ^ key1[i%key1.length]);
+//            System.out.println(out);
+//        }
+//        System.out.println(out);
+//        String decoded = new String(out);
         System.out.println(finalmsg);
         //      Amessage.setText(finalmsg);
         Log.d(TAG, "okok");
