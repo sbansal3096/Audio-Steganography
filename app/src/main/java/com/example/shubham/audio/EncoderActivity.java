@@ -1,5 +1,6 @@
 package com.example.shubham.audio;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,6 +20,23 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URI;
+import java.security.MessageDigest;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class EncoderActivity extends AppCompatActivity {
 
@@ -26,24 +44,19 @@ public class EncoderActivity extends AppCompatActivity {
     EditText key;
 
     Uri inputAudio;
-    Uri outputAudioUri;
     String outputAudio;
 
     private static final int FILE_SELECT_CODE = 0;
     private static final String TAG = "stegano";
 
     TextView label;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_encoder);
 
-        label = findViewById(R.id.label);
-
         outputAudio = Environment.getExternalStorageDirectory() + "/test.wav";
-        outputAudioUri = Uri.fromFile(new File(outputAudio));
-        label.setText(outputAudioUri.toString());
+
         Intent intent = getIntent();
 
         if (intent.getType() != null && intent.getType().contains("audio/")) {
@@ -52,6 +65,7 @@ public class EncoderActivity extends AppCompatActivity {
             Log.d(TAG, "" + inputAudio.toString());
         }
 
+        label = findViewById(R.id.label);
         if (inputAudio != null) {
             label.setText(inputAudio.toString());
         }
@@ -65,10 +79,9 @@ public class EncoderActivity extends AppCompatActivity {
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                outputAudioUri = Uri.fromFile(new File(outputAudio));
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("audio/*");
-                share.putExtra(Intent.EXTRA_STREAM, outputAudioUri);
+                share.putExtra(Intent.EXTRA_STREAM, inputAudio);
                 startActivity(Intent.createChooser(share, "Share Encrypted Sound File"));
             }
         });
@@ -95,21 +108,87 @@ public class EncoderActivity extends AppCompatActivity {
         encodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 LSBEncoderDecoder lsbEncoderDecoder = new LSBEncoderDecoder();
                 Log.d(TAG, inputAudio.toString());
                 Log.d(TAG, outputAudio);
                 try {
                     InputStream ins = getContentResolver().openInputStream(inputAudio);
-                    final String m  = message.getText().toString();
-                    final  String k1 = key.getText().toString();
+                    byte[] buffer = new byte[1024];
+                    MessageDigest digest = MessageDigest.getInstance("MD5");
+                    int numRead = 0;
+                    while (numRead != -1) {
+                        numRead = ins.read(buffer);
+                        if (numRead > 0)
+                            digest.update(buffer, 0, numRead);
+                    }
+                    byte[] md5Bytes = digest.digest();
+                    final String md5Hash = lsbEncoderDecoder.convertHashToString(md5Bytes);
+                    System.out.println("MD5 Hash of file is " + md5Hash);
+                    final String m = message.getText().toString();
+                    final String k1 = key.getText().toString();
                     int k = Integer.parseInt(k1);
                     SharedPrefManager.getInstance(getApplicationContext()).storeMessage(m);
                     SharedPrefManager.getInstance(getApplicationContext()).storeKey(k);
 
-                    lsbEncoderDecoder.Audioencrypt(m, ins,
-                            new File(outputAudio),k);
-                    label.setText("Encoding done");
+                    //lsbEncoderDecoder.Audioencrypt(m, ins,
+                    //new File(outputAudio),22);
+
+                    RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+
+                    Map<String, String> postParam = new HashMap<String, String>();
+                    postParam.put("key", k1);
+                    postParam.put("message", m);
+                    postParam.put("hash",md5Hash);
+
+
+                    JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                            EndPoints.URL_ENCRYPT, new JSONObject(postParam),
+                            new Response.Listener<JSONObject>() {
+
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    Log.d(TAG, response.toString());
+                                    //msgResponse.setText(response.toString());
+                                    System.out.println("Here is the Message from Server"+response.toString());
+                                    try {
+                                        Log.d(TAG,response.getString("status"));
+                                        Toast.makeText(getApplicationContext(),response.getString("status"),Toast.LENGTH_LONG);
+
+                                        Toast.makeText(getApplicationContext(),"Encyption Done!!!",Toast.LENGTH_LONG);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            VolleyLog.d(TAG, "Error: " + error.getMessage());
+                        }
+                    }) {
+                        /**
+                         * Passing some request headers
+                         */
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            HashMap<String, String> headers = new HashMap<String, String>();
+                            headers.put("Content-Type", "application/json; charset=utf-8");
+                            return headers;
+                        }
+
+
+                    };
+
+                    jsonObjReq.setTag(TAG);
+                    // Adding request to request queue
+                    queue.add(jsonObjReq);
+
                     Log.d("Done","Done Encryption");
+
+
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -130,5 +209,7 @@ public class EncoderActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+
 
 }

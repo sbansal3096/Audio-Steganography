@@ -329,4 +329,12 @@ public class LSBEncoderDecoder {
         ins.close();
         return finalmsg;
     }
+
+    public static String convertHashToString(byte[] md5Bytes) {
+        String returnVal = "";
+        for (int i = 0; i < md5Bytes.length; i++) {
+            returnVal += Integer.toString(( md5Bytes[i] & 0xff ) + 0x100, 16).substring(1);
+        }
+        return returnVal.toUpperCase();
+    }
 }
