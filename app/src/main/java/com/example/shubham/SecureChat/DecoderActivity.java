@@ -1,4 +1,4 @@
-package com.example.shubham.audio;
+package com.example.shubham.SecureChat;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -62,7 +62,7 @@ public class DecoderActivity extends AppCompatActivity {
         if (inputAudio != null) {
             String path=inputAudio.getPath();
             String fileName= path.substring(path.lastIndexOf('/')+1);
-            label.setText(path);
+            label.setText("File Imported");
         }
 
         Button importButton = findViewById(R.id.import_button);
@@ -80,6 +80,7 @@ public class DecoderActivity extends AppCompatActivity {
                     startActivityForResult(
                             Intent.createChooser(intent, "Select a File to Upload"),
                             FILE_SELECT_CODE);
+                    label.setText("File Imported");
                 } catch (android.content.ActivityNotFoundException ex) {
                     // Potentially direct the user to the Market with a Dialog
                     Toast.makeText(DecoderActivity.this, "Please install a File Manager.",
@@ -159,6 +160,7 @@ public class DecoderActivity extends AppCompatActivity {
                     jsonObjReq.setTag(TAG);
                     // Adding request to request queue
                     queue.add(jsonObjReq);
+                    label.setText("File Decoded");
                     //System.out.println(m);
                     //message.setText(m);
                     //Log.d(TAG,m);

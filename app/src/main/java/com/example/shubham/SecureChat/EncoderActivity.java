@@ -1,12 +1,8 @@
-package com.example.shubham.audio;
+package com.example.shubham.SecureChat;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,10 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.URI;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +24,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
@@ -67,7 +59,7 @@ public class EncoderActivity extends AppCompatActivity {
 
         label = findViewById(R.id.label);
         if (inputAudio != null) {
-            label.setText(inputAudio.toString());
+            label.setText("File Imported");
         }
 
         Button shareButton = findViewById(R.id.share_button);
@@ -97,6 +89,7 @@ public class EncoderActivity extends AppCompatActivity {
                     startActivityForResult(
                             Intent.createChooser(intent, "Select a File to Upload"),
                             FILE_SELECT_CODE);
+                    label.setText("File Imported");
                 } catch (android.content.ActivityNotFoundException ex) {
                     // Potentially direct the user to the Market with a Dialog
                     Toast.makeText(EncoderActivity.this, "Please install a File Manager.",
@@ -186,7 +179,7 @@ public class EncoderActivity extends AppCompatActivity {
                     queue.add(jsonObjReq);
 
                     Log.d("Done","Done Encryption");
-
+                    label.setText("File Encoded! Ready to Share");
 
 
                 } catch (Exception ex) {

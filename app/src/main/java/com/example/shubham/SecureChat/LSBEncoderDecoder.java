@@ -1,7 +1,6 @@
-package com.example.shubham.audio;
+package com.example.shubham.SecureChat;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -44,10 +43,8 @@ public class LSBEncoderDecoder {
         byte b[] = new byte[1];
         BigInteger Abi, Mbi;
         int k, k1;
-        //ins= new FileInputStream(file);
         OutputStream outs = new FileOutputStream(file);
 
-        System.out.println(message);
         String encoded = encode(message, String.valueOf(key));
         message = encoded;
         int len = message.length();
@@ -62,7 +59,6 @@ public class LSBEncoderDecoder {
                 BigInteger Blen = bd.toBigInteger();
                 String Slen = Blen.toString(2);
                 char Clen[] = new char[Blen.bitLength()];
-//                System.out.println(Blen.bitLength());
                 Slen.getChars(0, Blen.bitLength(), Clen, 0);
                 for (int j = 0; j <= 7; j++) {
                     if (j == 0) {
@@ -71,8 +67,6 @@ public class LSBEncoderDecoder {
                             Abi = new BigInteger(b);
                             String Aby = Abi.toString(2);
                             int Alen = Abi.bitLength();
-//                            System.out.println("Alen"+Alen);
-//                            System.out.println("N"+ n);
                             if (b[0] < 0) {
                                 Alen++;
                             }
@@ -90,7 +84,6 @@ public class LSBEncoderDecoder {
                                         BigInteger bi = new BigInteger("-1", 2);
                                         BigInteger big = Abi.subtract(bi);
                                         b = big.toByteArray();
-//                                        System.out.println("Big"+big +"Abi "+Abi +"Bi "+ bi) ;
                                     }
                                 }
                                 outs.write(b);
@@ -143,15 +136,14 @@ public class LSBEncoderDecoder {
                         outs.write(b);
                     } // end else
 
-                } // for loop j
+                }
 
-            } // end of if
+            }
             else {
                 String slen = String.valueOf(chmess[i - 1]);
                 byte blen[] = slen.getBytes();
                 BigInteger Blen = new BigInteger(blen);
                 String Slen = Blen.toString(2);
-//                System.out.println("Message is "+ slen+"Blen "+Blen +"Slen " +Slen);
                 char Clen[] = new char[Blen.bitLength()];
                 Slen.getChars(0, Blen.bitLength(), Clen, 0);
                 for (int j = 0; j <= 7; j++) {
@@ -243,7 +235,6 @@ public class LSBEncoderDecoder {
                 break;
             }
             outs.write(b);
-            System.out.println(outs);
         }
         ins.close();
         outs.close();
@@ -311,20 +302,7 @@ public class LSBEncoderDecoder {
         String finalmsg = message;
         String decoded = decode(finalmsg, String.valueOf(key));
         finalmsg= decoded;
-//        byte[] a= Base64.decode(finalmsg,Base64.DEFAULT);
-//        System.out.println(a);
-//        byte[] key1= String.valueOf(key).getBytes();
-//        System.out.println(key1);
-//        byte[] out = new byte[a.length];
-//        System.out.println(a.length);
-//        for (int i = 0; i < a.length; i++) {
-//            out[i] = (byte) (a[i] ^ key1[i%key1.length]);
-//            System.out.println(out);
-//        }
-//        System.out.println(out);
-//        String decoded = new String(out);
         System.out.println(finalmsg);
-        //      Amessage.setText(finalmsg);
         Log.d(TAG, "okok");
         ins.close();
         return finalmsg;
